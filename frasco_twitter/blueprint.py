@@ -10,11 +10,11 @@ def create_blueprint(app):
     @bp.route('/login/twitter')
     def login():
         callback_url = url_for('.callback', next=request.args.get('next'), _external=True)
-        return feature.twitter.authorize(callback=callback_url)
+        return feature.api.authorize(callback=callback_url)
 
     @bp.route('/login/twitter/callback')
     def callback():
-        resp = feature.twitter.authorized_response()
+        resp = feature.api.authorized_response()
         if resp is None:
             flash(feature.options["user_denied_login_message"], "error")
             return redirect(url_for("users.login"))

@@ -12,7 +12,7 @@ class TwitterFeature(Feature):
 
     def init_app(self, app):
         self.app = app
-        self.twitter = app.features.users.create_oauth_app("twitter",
+        self.api = app.features.users.create_oauth_app("twitter",
             base_url='https://api.twitter.com/1.1/',
             request_token_url='https://api.twitter.com/oauth/request_token',
             access_token_url='https://api.twitter.com/oauth/access_token',
@@ -21,7 +21,7 @@ class TwitterFeature(Feature):
             consumer_secret=self.options["consumer_secret"],
             login_view="twitter_login.login")
 
-        @self.twitter.tokengetter
+        @self.api.tokengetter
         def token_getter(token=None):
             if not current_user.is_authenticated() or not current_user.twitter_oauth_token:
                 return
@@ -34,4 +34,4 @@ class TwitterFeature(Feature):
 
     @action("post_twitter_update", default_option="status")
     def post_update(self, status):
-        self.twitter.post("statuses/update.json", data={"status": status})
+        self.api.post("statuses/update.json", data={"status": status})
